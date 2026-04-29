@@ -6,8 +6,6 @@
 
 // Level: 2nd Year Engineering
 
-// Duration: 60 minutes
-
 // ============================================================
 
 #include <iostream>
@@ -52,7 +50,7 @@ public:
 
     }
 
-    // TODO 5: declare Rectangle as friend class
+    // TODO 5: Rectangle is friend class
 
     friend class Rectangle;
 
@@ -75,19 +73,19 @@ public:
 
         : topLeft(x1, y1), bottomRight(x2, y2) {}
 
-    // TODO 7: const getWidth()
+    // TODO 7: const getWidth() — direct private access via friendship
 
     double getWidth() const {
 
-        return std::abs(bottomRight.x - topLeft.x);  // friend access
+        return std::abs(bottomRight.x - topLeft.x);
 
     }
 
-    // TODO 8: const getHeight()
+    // TODO 8: const getHeight() — direct private access via friendship
 
     double getHeight() const {
 
-        return std::abs(bottomRight.y - topLeft.y);  // friend access
+        return std::abs(bottomRight.y - topLeft.y);
 
     }
 
@@ -114,28 +112,32 @@ public:
         std::cout << ", width="  << getWidth()
 << ", height=" << getHeight()
 << ", area="   << getArea()
-<< " ]";
+<< " ]" << std::endl;
 
     }
 
-    // TODO 11: declare isSameSize as friend function
+    // TODO 11: isSameSize is friend function
 
     friend bool isSameSize(const Rectangle& r1, const Rectangle& r2);
 
 };
 
 
-// TODO 12: implement isSameSize
+// TODO 12: isSameSize — uses direct private member access + epsilon comparison
 
 bool isSameSize(const Rectangle& r1, const Rectangle& r2) {
 
-    // friend access lets us reach private members directly,
+    double w1 = std::abs(r1.bottomRight.x - r1.topLeft.x);
 
-    // but calling const member functions is perfectly fine too.
+    double h1 = std::abs(r1.bottomRight.y - r1.topLeft.y);
 
-    return (r1.getWidth()  == r2.getWidth()) &&
+    double w2 = std::abs(r2.bottomRight.x - r2.topLeft.x);
 
-           (r1.getHeight() == r2.getHeight());
+    double h2 = std::abs(r2.bottomRight.y - r2.topLeft.y);
+
+    return std::abs(w1 - w2) < 1e-9 &&
+
+           std::abs(h1 - h2) < 1e-9;
 
 }
 
@@ -156,11 +158,11 @@ public:
 
     int getValue() const { return value; }
 
-    // TODO 15: NON-const doubleValue() — multiplies value by 2
+    // TODO 15: NON-const doubleValue()
 
     void doubleValue() { value *= 2; }
 
-    // TODO 16: const constGetDouble() — returns value * 2 without modifying
+    // TODO 16: const constGetDouble()
 
     int constGetDouble() const { return value * 2; }
 
@@ -177,65 +179,49 @@ int main() {
 
     // TODO 17: Point demo
 
-    std::cout << "=== Point ===\n";
+    std::cout << "=== Point ===" << std::endl;
 
     Point p(3.0, 4.0);
 
     p.display();
 
-    std::cout << "\n";
+    std::cout << std::endl;
 
     // TODO 18: Rectangle demo
 
-    std::cout << "\n=== Rectangle ===\n";
+    std::cout << "\n=== Rectangle ===" << std::endl;
 
-    Rectangle r1(0.0, 6.0, 4.0, 0.0);   // 4 x 6
+    Rectangle r1(0.0, 6.0, 4.0, 0.0);  // 4 x 6
 
-    Rectangle r2(1.0, 3.0, 5.0, 0.0);   // 4 x 3
+    Rectangle r2(1.0, 3.0, 5.0, 0.0);  // 4 x 3
 
-    Rectangle r3(2.0, 5.0, 6.0, 2.0);   // 4 x 3  (same size as r2)
+    Rectangle r3(2.0, 5.0, 6.0, 2.0);  // 4 x 3
 
-    r1.display(); std::cout << "\n";
+    r1.display();
 
-    r2.display(); std::cout << "\n";
+    r2.display();
 
-    r3.display(); std::cout << "\n";
+    r3.display();
 
     // TODO 19: isSameSize demo
 
-    std::cout << "\n=== isSameSize ===\n";
+    std::cout << "\n=== isSameSize ===" << std::endl;
 
-    std::cout << "r1 vs r2: " << (isSameSize(r1, r2) ? "same" : "different") << "\n";
+    std::cout << "r1 vs r2: " << (isSameSize(r1, r2) ? "same" : "different") << std::endl;
 
-    std::cout << "r2 vs r3: " << (isSameSize(r2, r3) ? "same" : "different") << "\n";
+    std::cout << "r2 vs r3: " << (isSameSize(r2, r3) ? "same" : "different") << std::endl;
 
-    // TODO 20: ConstDemo — non-const object (can call all methods)
+    // TODO 20: ConstDemo non-const object
 
-    std::cout << "\n=== ConstDemo (non-const object) ===\n";
+    std::cout << "\n=== ConstDemo (non-const object) ===" << std::endl;
 
     ConstDemo cd(5);
 
-    std::cout << "value        = " << cd.getValue()       << "\n";
+    std::cout << "value       = " << cd.getValue()       << std::endl;
 
-    std::cout << "constDouble  = " << cd.constGetDouble() << "\n";
+    std::cout << "constDouble = " << cd.constGetDouble() << std::endl;
 
     cd.doubleValue();
 
-    std::cout << "after doubleValue(), value = " << cd.getValue() << "\n";
-
-    // TODO 21: ConstDemo — const object (can only call const methods)
-
-    std::cout << "\n=== ConstDemo (const object) ===\n";
-
-    const ConstDemo ccd(7);
-
-    std::cout << "value        = " << ccd.getValue()       << "\n";
-
-    std::cout << "constDouble  = " << ccd.constGetDouble() << "\n";
-
-    // ccd.doubleValue();  // ❌ compile error — non-const method on const object
-
-    return 0;
-
-}
+    std::cout << "after doubleValue
  
